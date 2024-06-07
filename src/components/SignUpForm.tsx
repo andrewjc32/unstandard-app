@@ -4,7 +4,7 @@ import { Button, Card, Label, TextInput, Alert } from "flowbite-react";
 import { signUpSchema, SignUpSchema } from "@/lib/schemas/registerSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signUp } from "@/app/actions/authActions";
+import { signUp } from "@/actions/authActions";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
