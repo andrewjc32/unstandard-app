@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card, Label, TextInput, Alert } from "flowbite-react";
-import { signUpSchema, SignUpSchema } from "@/lib/schemas/registerSchema";
+import { signUpSchema, SignUpSchema } from "@/lib/schemas/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signUp } from "@/actions/authActions";
