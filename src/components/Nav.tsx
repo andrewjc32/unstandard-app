@@ -11,11 +11,10 @@ import {
 } from "flowbite-react";
 import { Button } from "flowbite-react";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-// import { options } from "@/app/api/auth/[...nextauth]/options";
+import { auth } from '@/auth';
 
 const Nav = async () => {
-  const session = false;
+  const session = await auth();
 
   return (
     <Navbar fluid rounded>

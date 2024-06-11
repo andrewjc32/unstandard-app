@@ -1,30 +1,43 @@
-import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
-
 import type { NextAuthConfig } from "next-auth"
-import { signUpSchema } from "./lib/schemas/signUpSchema"
+import { loginSchema } from "./lib/schemas/loginSchema"
 import { getUserByEmail } from "./actions/authActions"
+import bcrypt from "bcryptjs"
 
 export default {
-    providers: [Google, Credentials({
+    providers: [
+        Credentials({
         name: "credentials",
         credentials: {
-            username: { label: "Username", type: "text" },
-            password: { label: "Password", type: "password" },
+            username: { label: "email", type: "text" },
+            password: { label: "password", type: "password" },
         },
-        async authorize(credentials, req) {
-            const validated = signUpSchema.safeParse(credentials);
+        async authorize(creds, req) {
+            const validated = loginSchema.safeParse(creds);
 
             if(validated.success) {
-                const { email } = validated.data;
+                const { email, password } = validated.data;
+
                 const user = await getUserByEmail(email);
+
+                console.log(user);
+
                 if(user) {
-                    return user;
+                    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+
+                    console.log('passwordMatch',passwordMatch);
+
+                    if(passwordMatch) {
+                        return user;
+                    } else {
+                        return null;
+                    }
                 }
-                return null;
-            } else {
+
                 return null;
             }
+
+            return null;
         }
     })],
 } satisfies NextAuthConfig
