@@ -6,5 +6,11 @@ import { prisma } from "./lib/prisma/prisma"
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session:{ strategy: 'jwt' },
+  callbacks: {
+    jwt: async({token}) => {
+      console.log('jwt callback', token)
+      return token;
+    }
+  },
   ...authConfig
 })

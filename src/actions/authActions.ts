@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma/prisma";
 import { signUpSchema, SignUpSchema } from "@/lib/schemas/signUpSchema";
 import { Users } from "@prisma/client";
@@ -74,4 +74,8 @@ export async function signInUser(data: LoginSchema): Promise<ActionResult<string
       return { status: 'error', error: 'An error occurred, please try again later.' };
     }
   }
+}
+
+export async function signOutUser() {
+  await signOut({ redirectTo: '/' });
 }

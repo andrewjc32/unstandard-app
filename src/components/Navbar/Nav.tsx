@@ -1,3 +1,4 @@
+
 import {
   Navbar,
   NavbarBrand,
@@ -9,9 +10,11 @@ import {
   DropdownItem,
   DropdownDivider,
 } from "flowbite-react";
+import NavMenu from "./NavMenu";
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import { auth } from '@/auth';
+import { signOutUser } from "@/actions/authActions";
 
 const Nav = async () => {
   const session = await auth();
@@ -37,35 +40,11 @@ const Nav = async () => {
         <NavbarLink href="#">Contact</NavbarLink>
       </NavbarCollapse>
       {session ? (
-        <div className="flex md:order-2">
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
-            }
-          >
-            <DropdownItem as={Link} href="/profile">
-              My profile
-            </DropdownItem>
-            <DropdownItem as={Link} href="/companies">
-              Companies
-            </DropdownItem>
-            <DropdownItem>Settings</DropdownItem>
-            <DropdownItem>Customer Service</DropdownItem>
-            <DropdownDivider />
-            <DropdownItem as={Link} href="/api/auth/signout?callbackUrl=/" className="text-red-400">Sign out</DropdownItem>
-          </Dropdown>
-          <NavbarToggle />
-        </div>
+        <NavMenu />
       ) : (
         <div className="flex md:order-2">
-          <Button as={Link} href="/login" color="light">Log In</Button>
-          <Button as={Link} href="/signup" color="blue">Sign Up</Button>
+          <Button as={Link} href="/login" className="mr-2" color="light">Log In</Button>
+          <Button as={Link} href="/signup" className="mr-2" color="blue">Sign Up</Button>
           <NavbarToggle />
         </div>
       )}
