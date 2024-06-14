@@ -18,7 +18,7 @@ model Users {
   name          String?
   email         String?         @unique
   passwordHash  String
-  emailVerified DateTime?
+  emailVerified Boolean? @default(false)
   image         String?
   accounts      Accounts[]
  
@@ -48,3 +48,17 @@ model Accounts {
   @@unique([provider, providerAccountId])
 }
 
+model Token {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  token     String
+  expires   DateTime
+  type      TokenType
+  
+  @@unique([email, token])
+}
+
+enum TokenType {
+  VERIFICATION
+  PASSWORD_RESET
+}

@@ -1,20 +1,14 @@
-
 import {
   Navbar,
   NavbarBrand,
   NavbarCollapse,
   NavbarLink,
   NavbarToggle,
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownDivider,
 } from "flowbite-react";
 import NavMenu from "./NavMenu";
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import { auth } from '@/auth';
-import { signOutUser } from "@/actions/authActions";
 
 const Nav = async () => {
   const session = await auth();
