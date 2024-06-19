@@ -20,7 +20,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    console.log(data);
     const result = await signInUser(data);
 
     if (result.status === "success") {
@@ -133,7 +132,7 @@ const LoginForm = () => {
         </div>
         <div className="flex mb-4">
           <Link
-            href="#"
+            href="/forgot-password"
             className="text-sm font-medium text-blue-600 hover:underline"
           >
             Forgot Password?
@@ -149,7 +148,7 @@ const LoginForm = () => {
         </Button>
         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
           Don’t have an account yet?{" "}
-          <Link href="#" className="font-medium text-blue-600 hover:underline">
+          <Link href="/signup" className="font-medium text-blue-600 hover:underline">
             Sign up
           </Link>
         </p>

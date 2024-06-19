@@ -9,7 +9,7 @@ import bcrypt from "bcryptjs";
 import { LoginSchema } from "@/lib/schemas/loginSchema";
 import { AuthError } from "next-auth";
 import { generateToken, getTokenByToken } from "@/lib/tokens";
-import { sendVerifyEmail } from "@/lib/mail";
+import { sendResetPassword, sendVerifyEmail } from "@/lib/mail";
 
 export async function signUp(data: SignUpSchema): Promise<ActionResult<Users>> {
   try {
@@ -133,5 +133,65 @@ export async function verifyEmail(token: string): Promise<ActionResult<string>> 
   } catch (error) {
     console.error(error);
     throw error;
+  }
+}
+
+export async function requestResetPassword(email: string): Promise<ActionResult<string>> {
+  try {
+    const existingUser = await getUserByEmail(email);
+
+    if(!existingUser) {
+      return { status: 'error', error: 'User not found' };
+    }
+
+    const token = await generateToken(email, TokenType.PASSWORD_RESET);
+
+    await sendResetPassword(email, token.token);
+
+    return { status: 'success', data: 'Password reset email has been sent.' };
+  } catch (error) {
+    console.error(error);
+    return { status: 'error', error: 'An error occurred, please try again later.' };
+  }
+}
+
+export async function resetPassword(password: string, token: string | null): Promise<ActionResult<string>> {
+  if(!token)
+    return { status: 'error', error: 'Invalid token' };
+
+  try {
+    const existingToken = await getTokenByToken(token);
+
+    if(!existingToken) {
+      return { status: 'error', error: 'Invalid token' };
+    }
+
+    const hasExpired = new Date() > existingToken.expires;
+
+    if(hasExpired) {
+      return { status: 'error', error: 'Token has expired' };
+    }
+
+    const existingUser = await getUserByEmail(existingToken.email);
+
+    if(!existingUser) {
+      return { status: 'error', error: 'User not found' };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.users.update({
+      where: { email: existingToken.email },
+      data: { passwordHash: hashedPassword }
+    });
+
+    await prisma.token.delete({
+      where: { id: existingToken.id }
+    });
+
+    return { status: 'success', data: 'Password updated successfully' };
+  } catch (error) {
+    console.error(error);
+    return { status: 'error', error: 'An error occurred, please try again later.' };
   }
 }
