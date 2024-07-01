@@ -14,47 +14,24 @@ datasource db {
 }
 
 model Users {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?         @unique
-  passwordHash  String
+  email         String?  @unique
+  passwordHash  String?
   emailVerified Boolean? @default(false)
   image         String?
-  accounts      Accounts[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
- 
-model Accounts {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@unique([provider, providerAccountId])
 }
 
 model Token {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String
-  token     String
-  expires   DateTime
-  type      TokenType
-  
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  email   String
+  token   String
+  expires DateTime
+  type    TokenType
+
   @@unique([email, token])
 }
 

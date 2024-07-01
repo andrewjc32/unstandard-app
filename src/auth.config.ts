@@ -1,4 +1,6 @@
 import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
+import Apple from "next-auth/providers/apple"
 import type { NextAuthConfig } from "next-auth"
 import { loginSchema } from "./lib/schemas/loginSchema"
 import { getUserByEmail } from "./actions/authActions"
@@ -6,6 +8,10 @@ import bcrypt from "bcryptjs"
 
 export default {
     providers: [
+        Google({
+            clientId: process.env.AUTH_GOOGLE_ID,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET,
+        }),
         Credentials({
         name: "credentials",
         credentials: {
@@ -20,9 +26,7 @@ export default {
 
                 const user = await getUserByEmail(email);
 
-                console.log(user);
-
-                if(user) {
+                if(user && user.passwordHash) {
                     const passwordMatch = await bcrypt.compare(password, user.passwordHash);
 
                     console.log('passwordMatch',passwordMatch);

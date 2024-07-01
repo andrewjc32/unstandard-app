@@ -9,6 +9,8 @@ import NavMenu from "./NavMenu";
 import { Button } from "flowbite-react";
 import Link from "next/link";
 import { auth } from '@/auth';
+import Image from "next/image";
+import logo from '@/assets/megaman-logo.jpg';
 
 const Nav = async () => {
   const session = await auth();
@@ -16,8 +18,9 @@ const Nav = async () => {
   return (
     <Navbar fluid rounded>
       <NavbarBrand as={Link} href="/">
-        <img
-          src="/megaman-logo.jpg"
+        <Image
+          src={logo}
+          width={80}
           className="mr-3 h-6 sm:h-9"
           alt="Megaman Logo"
         />

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { signInUser } from "@/actions/authActions";
+import { signIn } from 'next-auth/react';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -18,6 +19,12 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
+
+  const socialSignIn = (provider: 'google' | 'apple') => {
+    signIn(provider, {
+      callbackUrl: '/'
+    });
+  };
 
   const onSubmit = async (data: LoginSchema) => {
     const result = await signInUser(data);
@@ -33,7 +40,7 @@ const LoginForm = () => {
     <Card className="max-w-sm md:w-2/5 xs:w-4/5 mx-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold mb-4">Welcome back</h1>
-        <Button className="w-full mb-2" color="light" outline>
+        <Button onClick={() => socialSignIn('google')} className="w-full mb-2" color="light" outline>
           <svg
             className="w-5 h-5 mr-2"
             viewBox="0 0 21 20"
